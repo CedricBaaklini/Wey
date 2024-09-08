@@ -18,8 +18,14 @@
 		</div>
 
 		<div class="main-center col-span-2 space-y-4">
+			<div class="p-4 bg-white-border border-gray-200 text-center rounded-lg">
+				<div class="p-4">
+					<textarea class="p-4 w-full bg-gray-100 rounded-lg" placeholder="What are you thinking?">
 
-		</divc>
+					</textarea>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
