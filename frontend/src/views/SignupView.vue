@@ -16,26 +16,38 @@
 
 		<div class="main-right">
 			<div class="p-12 bg-white border border-gray-200 rounded-lg">
-				<form class="space-y-6">
+				<form class="space-y-6" v-on:submit.prevent = "submitForm">
 					<div>
 						<label> Name </label>
-						<input type="text" placeholder="Your name" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+						<br>
+						<input type="text" v-model="form.name" placeholder="Your name" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
 					</div>
 
 					<div>
 						<label> E-mail </label>
-						<input type="email" placeholder="Your email address" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+						<br>
+						<input type="email" v-model="form.email" placeholder="Your email address" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
 					</div>
 
 					<div>
 						<label> Password </label>
-						<input type="password" placeholder="Your password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+						<br>
+						<input type="password" v-model="form.password1" placeholder="Your password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
 					</div>
 
 					<div>
 						<label> Repeat password </label>
-						<input type="password" placeholder="Repeat password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
+						<br>
+						<input type="password" v-model="form.password2" placeholder="Repeat password" class="w-full mt-2 py-4 px-6 border border-gray-200 rounded-lg">
 					</div>
+
+					<template v-if="errors">
+						<div class="bg-red-300 text-black rounded-lg p-6">
+							<p v-for="error in errors" v-bind:key="error">
+								{{ error }}
+							</p>
+						</div>
+					</template>
 
 					<div>
 						<button class="py-4 px-6 bg-purple-600 text-white rounded-lg"> Sign up </button>
@@ -49,6 +61,7 @@
 <script>
 
 import axios from 'axios'
+import { useToastStore } from '@/stores/toast.js';
 
 export default {
 	setup() {
@@ -95,7 +108,16 @@ export default {
 				axios
 						.post('/api/auth/signup', this.form)
 						.then(response => {
+							if (response.data.message === 'success') {
+								this.toastStore.showToast(5000, 'The user is registered. Please log in', 'bg-emerald-500')
 
+								this.form.email = ''
+								this.form.name = ''
+								this.form.password1 = ''
+								this.form.password2 = ''
+							} else {
+								this.toastStore.showToast(5000, 'Something went wrong. Please try again', 'bg-red-500')
+							}
 						})
 						.catch(error => {
 							console.log('error', error)
