@@ -45,3 +45,64 @@
 		</div>
 	</div>
 </template>
+
+<script>
+
+import axios from 'axios'
+
+export default {
+	setup() {
+		const toastStore = useToastStore()
+
+		return {
+			toastStore
+		}
+	},
+
+	data() {
+		return {
+			form: {
+				email: '',
+				name: '',
+				password1: '',
+				password2: '',
+			},
+			errors: [],
+		}
+	},
+
+	methods: {
+		submitForm() {
+			this.errors = []
+
+			if (this.form.email === '') {
+				this.errors.push('E-mail is required')
+			}
+
+			if (this.form.name === '') {
+				this.errors.push('Name is required')
+			}
+
+			if (this.form.password1 === '') {
+				this.errors.push('Password is required')
+			}
+
+			if (this.form.password1 !== this.form.password2) {
+				this.errors.push('Password does not match')
+			}
+
+			if (this.errors.length === 0) {
+				axios
+						.post('/api/auth/signup', this.form)
+						.then(response => {
+
+						})
+						.catch(error => {
+							console.log('error', error)
+						})
+			}
+		}
+	},
+}
+
+</script>
