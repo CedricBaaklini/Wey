@@ -66,18 +66,18 @@
 				</div>
 			</div>
 
-			<div class="p-4 bg-white border border-gray-200 rounded-lg">
+			<div class="p-4 bg-white border border-gray-200 rounded-lg" v-for="post in posts" :key="post.id">
 				<div class="mb-6 flex items-center justify-between">
 					<div class="flex items-center space-x-6">
-						<img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full">
+						<img alt="profile pic" src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full">
 
-						<p><strong>Cedric Baaklini</strong></p>
+						<p><strong> {{ post.created_by.name }} </strong></p>
 					</div>
 
 					<p class="text-gray-600">18 minutes ago</p>
 				</div>
 
-				<p>Lorem ipsum bla bla lbalkjasldkfj aslkjdf lkasjdfkljaslkfjalksjf</p>
+				<p> {{ post.body }} </p>
 
 				<div class="my-6 flex justify-between">
 					<div class="flex space-x-6">
@@ -116,6 +116,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 import Trends from '../components/Trends.vue';
 
@@ -124,6 +125,31 @@ export default {
 	components: {
 		PeopleYouMayKnow,
 		Trends
+	},
+
+	data() {
+		return {
+			posts: []
+		}
+	},
+
+	mounted() {
+		this.getFeed()
+	},
+
+	methods: {
+		getFeed() {
+			axios
+					.get('/api/posts')
+					.then(response => {
+						console.log('data', response.data)
+
+						this.posts = response.data
+					})
+					.catch(error => {
+						console.log('error', error)
+					})
+		}
 	}
 }
 </script>
